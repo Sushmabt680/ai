@@ -1,0 +1,37 @@
+import math
+
+def alphabeta(node, depth, alpha, beta, maximizing_player, tree):
+    # If leaf node (has no children)
+    if depth == 0 or node not in tree:
+        return node  # node itself is a leaf value
+
+    if maximizing_player:
+        max_eval = -math.inf
+        for child in tree[node]:
+            val = alphabeta(child, depth - 1, alpha, beta, False, tree)
+            max_eval = max(max_eval, val)
+            alpha = max(alpha, val)
+            if beta <= alpha:
+                break  # Beta cutoff
+        return max_eval
+
+    else:  # Minimizing
+        min_eval = math.inf
+        for child in tree[node]:
+            val = alphabeta(child, depth - 1, alpha, beta, True, tree)
+            min_eval = min(min_eval, val)
+            beta = min(beta, val)
+            if beta <= alpha:
+                break  # Alpha cutoff
+        return min_eval
+
+
+# Example tree (leaf nodes are numbers)
+tree = {
+    'A': ['B', 'C'],
+    'B': [3, 5, 6],
+    'C': [2, 9, 1]
+}
+
+result = alphabeta('A', 3, -math.inf, math.inf, True, tree)
+print("Best value:", result)
